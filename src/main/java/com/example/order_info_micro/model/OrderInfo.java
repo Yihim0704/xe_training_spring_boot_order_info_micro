@@ -1,18 +1,40 @@
 package com.example.order_info_micro.model;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "order_info")
 public class OrderInfo {
     @Id
     private String id;
+
+    @Length(min = 36, max = 36, message = "Wizard Id must be 36 characters including (-).")
+    @Pattern(regexp = "^[a-zA-Z0-9-]+$", message = "Wizard Id should not be containing special characters except (-).")
     private String wizardId;
+
+    @NotNull(message = "Wizard name should not be null.")
+    @NotBlank(message = "Wizard name should not be blank.")
+    @Pattern(regexp = "^[a-zA-Z ]+$", message = "Wizard name should not be containing special characters and numbers.")
     private String wizardName;
+
+    @Length(min = 36, max = 36, message = "Magic wand catalogue Id must be 36 characters including (-).")
+    @Pattern(regexp = "^[a-zA-Z0-9-]+$", message = "Magic wand catalogue Id should not be containing special characters except (-).")
     private String magicWandCatalogueId;
+    
+    @NotNull(message = "Magic wand name should not be null.")
+    @NotBlank(message = "Magic wand name should not be blank.")
+    @Pattern(regexp = "^[a-zA-Z ]+$", message = "Magic wand name should not be containing special characters and numbers.")
     private String magicWandCatalogueName;
+
+    @Min(0)
     private int quantity;
 
     public OrderInfo() {
