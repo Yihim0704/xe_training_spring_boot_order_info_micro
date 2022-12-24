@@ -18,13 +18,12 @@ public class RTMagicWandCatalogueServiceImpl implements RTMagicWandCatalogueServ
     RestTemplate restTemplate = new RestTemplate();
 
     @Override
-    public MagicWandCatalogue[] getAllMagicWandCatalogue() {
+    public MagicWandCatalogue getMagicWandCatalogueById(String id) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<String>(headers);
-        ResponseEntity<MagicWandCatalogue[]> response = restTemplate.exchange(ApiUrl.MAGIC_WAND_CATALOGUE_FIND_ALL_URL, HttpMethod.GET, entity, MagicWandCatalogue[].class);
-        MagicWandCatalogue[] magicWandCatalogue = response.getBody();
-        logger.info(magicWandCatalogue[0].getId());
+        ResponseEntity<MagicWandCatalogue> response = restTemplate.exchange(ApiUrl.MAGIC_WAND_CATALOGUE_FIND_ALL_URL + id, HttpMethod.GET, entity, MagicWandCatalogue.class);
+        MagicWandCatalogue magicWandCatalogue = response.getBody();
         return magicWandCatalogue;
     }
 }

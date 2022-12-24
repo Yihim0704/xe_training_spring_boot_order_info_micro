@@ -4,6 +4,7 @@ import com.example.order_info_micro.integration.RTMagicWandCatalogueServiceImpl;
 import com.example.order_info_micro.model.MagicWandCatalogue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +17,7 @@ public class RTMagicWandCatalogueControllerImpl implements RTMagicWandCatalogueC
 
     @Override
     @GetMapping("find-all")
-    public MagicWandCatalogue[] findAllMagicWandCatalogue() {
-        return rtMagicWandCatalogueService.getAllMagicWandCatalogue();
+    public MagicWandCatalogue findMagicWandCatalogueById(@PathVariable String id) {
+        return rtMagicWandCatalogueService.getMagicWandCatalogueById(id);
     }
 }

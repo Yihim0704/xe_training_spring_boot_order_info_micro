@@ -1,28 +1,49 @@
 package com.example.order_info_micro.service;
 
+import com.example.order_info_micro.business.MagicWandCatalogueValidationImpl;
+import com.example.order_info_micro.business.WizardInfoValidationImpl;
 import com.example.order_info_micro.database.OrderInfoRepository;
-import com.example.order_info_micro.exception.NoOrderInfoFoundException;
-import com.example.order_info_micro.exception.OrderInfoIdNotFoundException;
+import com.example.order_info_micro.exception.client.MagicWandCatalogueNotValidException;
+import com.example.order_info_micro.exception.client.WizardInfoNotValidException;
+import com.example.order_info_micro.exception.server.NoOrderInfoFoundException;
+import com.example.order_info_micro.exception.server.OrderInfoIdNotFoundException;
 import com.example.order_info_micro.model.OrderInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class OrderInfoServiceImpl implements OrderInfoService {
 
     @Autowired
+    private WizardInfoValidationImpl wizardInfoValidationImpl;
+
+    @Autowired
+    private MagicWandCatalogueValidationImpl magicWandCatalogueValidationImpl;
+
+    @Autowired
     private OrderInfoRepository orderInfoRepository;
 
     @Override
     public OrderInfo saveOrderInfo(OrderInfo orderInfo) {
-        String id = UUID.randomUUID().toString();
-        orderInfo.setId(id);
-        orderInfo.setWizardName(orderInfo.getWizardName().trim());
-        orderInfo.setMagicWandCatalogueName(orderInfo.getMagicWandCatalogueName().trim());
-        return orderInfoRepository.save(orderInfo);
+        Map<String, String> validWizardInfo = wizardInfoValidationImpl.wizardInfoDetailsValidation(orderInfo.getWizardId(), orderInfo.getWizardName());
+        Map<String, String> validMagicWandCatalogue = magicWandCatalogueValidationImpl.magicWandCatalogueDetailsValidation(orderInfo.getMagicWandCatalogueId(), orderInfo.getMagicWandCatalogueName(), orderInfo.getWizardId());
+        if (validWizardInfo.get("Result").equalsIgnoreCase("Wizard details are valid.")) {
+            if (validMagicWandCatalogue.get("Result").equalsIgnoreCase("Magic wand catalogue details are valid and wizard's age is applicable.")) {
+                String id = UUID.randomUUID().toString();
+                orderInfo.setId(id);
+                orderInfo.setWizardName(orderInfo.getWizardName().trim());
+                orderInfo.setMagicWandCatalogueName(orderInfo.getMagicWandCatalogueName().trim());
+                return orderInfoRepository.save(orderInfo);
+            } else {
+                throw new MagicWandCatalogueNotValidException(validMagicWandCatalogue.get("Result"), validMagicWandCatalogue.get("HttpStatus"));
+            }
+        } else {
+            throw new WizardInfoNotValidException(validWizardInfo.get("Result"), validWizardInfo.get("HttpStatus"));
+        }
     }
 
     @Override
@@ -47,9 +68,9 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             throw new OrderInfoIdNotFoundException("Order info does not exist.");
         }
         OrderInfo existingOrderInfo = orderInfoRepository.findById(id).orElse(null);
-        existingOrderInfo.setWizardId(orderInfo.getWizardId().trim());
+        existingOrderInfo.setWizardId(orderInfo.getWizardId());
         existingOrderInfo.setWizardName(orderInfo.getWizardName().trim());
-        existingOrderInfo.setMagicWandCatalogueId(orderInfo.getMagicWandCatalogueId().trim());
+        existingOrderInfo.setMagicWandCatalogueId(orderInfo.getMagicWandCatalogueId());
         existingOrderInfo.setMagicWandCatalogueName(orderInfo.getMagicWandCatalogueName().trim());
         existingOrderInfo.setQuantity(orderInfo.getQuantity());
         return orderInfoRepository.save(existingOrderInfo);
