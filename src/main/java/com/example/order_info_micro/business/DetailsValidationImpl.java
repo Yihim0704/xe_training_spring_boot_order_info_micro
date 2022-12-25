@@ -12,13 +12,43 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class MagicWandCatalogueValidationImpl implements MagicWandCatalogueValidation {
+public class DetailsValidationImpl implements DetailsValidation {
 
     @Autowired
     RTMagicWandCatalogueServiceImpl rtMagicWandCatalogueServiceImpl;
 
     @Autowired
     RTWizardInfoServiceImpl rtWizardInfoServiceImpl;
+
+    @Override
+    public Map<String, String> wizardInfoDetailsValidation(String id, String name) {
+        Map<String, String> wizardInfoDetailsResult = new HashMap<>();
+        WizardInfo existWizardInfo = rtWizardInfoServiceImpl.getWizardInfoById(id);
+        String existWizardInfoId = existWizardInfo.getId();
+        String existWizardInfoName = existWizardInfo.getName();
+        boolean existWizardInfoActive = existWizardInfo.isActive();
+        if (id.equals(existWizardInfoId)) {
+            if (name.equalsIgnoreCase(existWizardInfoName)) {
+                if (existWizardInfoActive) {
+                    wizardInfoDetailsResult.put("Result", "Wizard details are valid.");
+                    wizardInfoDetailsResult.put("HttpStatus", HttpStatus.OK.toString());
+                    return wizardInfoDetailsResult;
+                } else {
+                    wizardInfoDetailsResult.put("Result", "Wizard status is not active.");
+                    wizardInfoDetailsResult.put("HttpStatus", HttpStatus.OK.toString());
+                    return wizardInfoDetailsResult;
+                }
+            } else {
+                wizardInfoDetailsResult.put("Result", "Wizard name is not match, try check wizard name whether has changed to a new name.");
+                wizardInfoDetailsResult.put("HttpStatus", HttpStatus.NOT_FOUND.toString());
+                return wizardInfoDetailsResult;
+            }
+        } else {
+            wizardInfoDetailsResult.put("Result", "Wizard Id is not match.");
+            wizardInfoDetailsResult.put("HttpStatus", HttpStatus.NOT_FOUND.toString());
+            return wizardInfoDetailsResult;
+        }
+    }
 
     @Override
     public Map<String, String> magicWandCatalogueDetailsValidation(String id, String name, String wizardInfoId) {
@@ -48,7 +78,7 @@ public class MagicWandCatalogueValidationImpl implements MagicWandCatalogueValid
                     return magicWandCatalogueDetailsResult;
                 }
             } else {
-                magicWandCatalogueDetailsResult.put("Result", "Magic wand catalogue name is not match.");
+                magicWandCatalogueDetailsResult.put("Result", "Magic wand catalogue name is not match, try check magic wand catalogue name whether has changed to a new name.");
                 magicWandCatalogueDetailsResult.put("HttpStatus", HttpStatus.NOT_FOUND.toString());
                 return magicWandCatalogueDetailsResult;
             }

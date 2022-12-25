@@ -28,7 +28,7 @@ public class OrderInfo {
     @Length(min = 36, max = 36, message = "Magic wand catalogue Id must be 36 characters including (-).")
     @Pattern(regexp = "^[a-zA-Z0-9-]+$", message = "Magic wand catalogue Id should not be containing special characters except (-).")
     private String magicWandCatalogueId;
-    
+
     @NotNull(message = "Magic wand name should not be null.")
     @NotBlank(message = "Magic wand name should not be blank.")
     @Pattern(regexp = "^[a-zA-Z ]+$", message = "Magic wand name should not be containing special characters and numbers.")
@@ -95,5 +95,17 @@ public class OrderInfo {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderInfo{" +
+                "id='" + id + '\'' +
+                ", wizardId='" + wizardId + '\'' +
+                ", wizardName='" + wizardName + '\'' +
+                ", magicWandCatalogueId='" + magicWandCatalogueId + '\'' +
+                ", magicWandCatalogueName='" + magicWandCatalogueName + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
 }

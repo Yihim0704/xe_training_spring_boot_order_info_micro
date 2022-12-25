@@ -16,7 +16,7 @@ public class RTMagicWandCatalogueControllerImpl implements RTMagicWandCatalogueC
     private RTMagicWandCatalogueServiceImpl rtMagicWandCatalogueService;
 
     @Override
-    @GetMapping("find-all")
+    @GetMapping("find-id/{id}")
     public MagicWandCatalogue findMagicWandCatalogueById(@PathVariable String id) {
         return rtMagicWandCatalogueService.getMagicWandCatalogueById(id);
     }

@@ -47,6 +47,18 @@ public class ServerExceptionsHandler {
         return exceptionFormat.toFormat();
     }
 
+    @ExceptionHandler(OrderInfoExistException.class)
+    public Map<String, Object> handleOrderInfoExistException(OrderInfoExistException ex) {
+        Map<String, Object> message = new HashMap<>();
+        String orderInfoExistExceptionTraceId = generateTraceId();
+        message.put("code", HttpStatus.CONFLICT.toString());
+        message.put("message", ex.getLocalizedMessage());
+        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), orderInfoExistExceptionTraceId, message);
+        logger.info("OrderInfoExistExceptionTraceId: {}", orderInfoExistExceptionTraceId);
+        logger.info(String.valueOf(exceptionFormat.toFormat()));
+        return exceptionFormat.toFormat();
+    }
+
     @ExceptionHandler(NoOrderInfoFoundException.class)
     public Map<String, Object> handleNoWizardInfoFoundException(NoOrderInfoFoundException ex) {
         Map<String, Object> message = new HashMap<>();
