@@ -1,13 +1,18 @@
 package com.example.order_info_micro.service;
 
 import com.example.order_info_micro.business.MagicWandCatalogueValidationImpl;
+import com.example.order_info_micro.business.OrderQuantityUpdateImpl;
 import com.example.order_info_micro.business.WizardInfoValidationImpl;
 import com.example.order_info_micro.database.OrderInfoRepository;
 import com.example.order_info_micro.exception.client.MagicWandCatalogueNotValidException;
 import com.example.order_info_micro.exception.client.WizardInfoNotValidException;
 import com.example.order_info_micro.exception.server.NoOrderInfoFoundException;
 import com.example.order_info_micro.exception.server.OrderInfoIdNotFoundException;
+import com.example.order_info_micro.integration.RTMagicWandCatalogueServiceImpl;
+import com.example.order_info_micro.model.MagicWandCatalogue;
 import com.example.order_info_micro.model.OrderInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +23,19 @@ import java.util.UUID;
 @Service
 public class OrderInfoServiceImpl implements OrderInfoService {
 
+    private static final Logger logger = LoggerFactory.getLogger(RTMagicWandCatalogueServiceImpl.class);
+
     @Autowired
     private WizardInfoValidationImpl wizardInfoValidationImpl;
 
     @Autowired
     private MagicWandCatalogueValidationImpl magicWandCatalogueValidationImpl;
+
+    @Autowired
+    private OrderQuantityUpdateImpl orderQuantityUpdateImpl;
+
+    @Autowired
+    private RTMagicWandCatalogueServiceImpl rtMagicWandCatalogueServiceImpl;
 
     @Autowired
     private OrderInfoRepository orderInfoRepository;
@@ -67,11 +80,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         if (!orderInfoRepository.findById(id).isPresent()) {
             throw new OrderInfoIdNotFoundException("Order info does not exist.");
         }
+        OrderInfo currentOderInfo = getOrderInfoById(id);
+        MagicWandCatalogue updatedMagicWandCatalogueStock = orderQuantityUpdateImpl.updateMagicWandCatalogueStock(id, orderInfo.getMagicWandCatalogueId(), orderInfo.getQuantity(), currentOderInfo);
+        rtMagicWandCatalogueServiceImpl.updateMagicWandCatalogueById(orderInfo.getMagicWandCatalogueId(), updatedMagicWandCatalogueStock);
         OrderInfo existingOrderInfo = orderInfoRepository.findById(id).orElse(null);
-        existingOrderInfo.setWizardId(orderInfo.getWizardId());
-        existingOrderInfo.setWizardName(orderInfo.getWizardName().trim());
-        existingOrderInfo.setMagicWandCatalogueId(orderInfo.getMagicWandCatalogueId());
-        existingOrderInfo.setMagicWandCatalogueName(orderInfo.getMagicWandCatalogueName().trim());
         existingOrderInfo.setQuantity(orderInfo.getQuantity());
         return orderInfoRepository.save(existingOrderInfo);
     }

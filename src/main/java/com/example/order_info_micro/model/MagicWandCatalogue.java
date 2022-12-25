@@ -23,6 +23,10 @@ public class MagicWandCatalogue {
         return ageLimit;
     }
 
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
     public int getStock() {
         return stock;
     }

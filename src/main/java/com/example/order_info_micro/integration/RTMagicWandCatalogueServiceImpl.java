@@ -26,4 +26,13 @@ public class RTMagicWandCatalogueServiceImpl implements RTMagicWandCatalogueServ
         MagicWandCatalogue magicWandCatalogue = response.getBody();
         return magicWandCatalogue;
     }
+
+    @Override
+    public String updateMagicWandCatalogueById(String id, MagicWandCatalogue magicWandCatalogue) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<MagicWandCatalogue> requestUpdate = new HttpEntity<MagicWandCatalogue>(magicWandCatalogue, headers);
+        restTemplate.exchange(ApiUrl.MAGIC_WAND_CATALOGUE_UPDATE_ID_URL + id, HttpMethod.PUT, requestUpdate, void.class);
+        return "Magic wand catalogue stock updated successfully";
+    }
 }
