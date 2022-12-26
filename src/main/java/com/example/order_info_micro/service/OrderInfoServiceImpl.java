@@ -1,6 +1,7 @@
 package com.example.order_info_micro.service;
 
 import com.example.order_info_micro.business.DetailsValidationImpl;
+import com.example.order_info_micro.business.NameUpdateImpl;
 import com.example.order_info_micro.business.OrderQuantityUpdateImpl;
 import com.example.order_info_micro.database.OrderInfoRepository;
 import com.example.order_info_micro.exception.client.MagicWandCatalogueNotValidException;
@@ -33,6 +34,9 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
     @Autowired
     private RTMagicWandCatalogueServiceImpl rtMagicWandCatalogueServiceImpl;
+
+    @Autowired
+    private NameUpdateImpl nameUpdateImpl;
 
     @Autowired
     private OrderInfoRepository orderInfoRepository;
@@ -100,9 +104,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
                 OrderInfo currentOderInfo = getOrderInfoById(id);
                 MagicWandCatalogue updatedMagicWandCatalogueStock = orderQuantityUpdateImpl.updateMagicWandCatalogueStockOnUpdateOrderInfo(orderInfo.getMagicWandCatalogueId(), orderInfo.getQuantity(), currentOderInfo);
                 rtMagicWandCatalogueServiceImpl.updateMagicWandCatalogueById(orderInfo.getMagicWandCatalogueId(), updatedMagicWandCatalogueStock);
-                OrderInfo existingOrderInfo = orderInfoRepository.findById(id).orElse(null);
-                existingOrderInfo.setQuantity(orderInfo.getQuantity());
-                return orderInfoRepository.save(existingOrderInfo);
+                List<OrderInfo> currentAllOrderInfo = getAllOrderInfo();
+                nameUpdateImpl.updateOrderInfoWizardAndMagicWandName(currentAllOrderInfo, currentOderInfo, orderInfo);
+                currentOderInfo.setQuantity(orderInfo.getQuantity());
+                return orderInfoRepository.save(currentOderInfo);
             } else {
                 throw new MagicWandCatalogueNotValidException(validMagicWandCatalogue.get("Result"), validMagicWandCatalogue.get("HttpStatus"));
             }

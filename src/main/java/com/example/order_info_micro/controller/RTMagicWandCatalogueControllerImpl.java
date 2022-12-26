@@ -13,11 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class RTMagicWandCatalogueControllerImpl implements RTMagicWandCatalogueController {
 
     @Autowired
-    private RTMagicWandCatalogueServiceImpl rtMagicWandCatalogueService;
+    private RTMagicWandCatalogueServiceImpl rtMagicWandCatalogueServiceImpl;
+
+    @Override
+    @GetMapping("find-all")
+    public MagicWandCatalogue[] findAllMagicWandCatalogue() {
+        return rtMagicWandCatalogueServiceImpl.getAllMagicWandCatalogue();
+    }
 
     @Override
     @GetMapping("find-id/{id}")
     public MagicWandCatalogue findMagicWandCatalogueById(@PathVariable String id) {
-        return rtMagicWandCatalogueService.getMagicWandCatalogueById(id);
+        return rtMagicWandCatalogueServiceImpl.getMagicWandCatalogueById(id);
     }
 }

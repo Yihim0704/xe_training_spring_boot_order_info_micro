@@ -16,8 +16,15 @@ public class RTWizardInfoControllerImpl implements RTWizardInfoController {
     private RTWizardInfoServiceImpl RTWizardInfoServiceImpl;
 
     @Override
+    @GetMapping("find-all")
+    public WizardInfo[] findAllWizardInfo() {
+        return RTWizardInfoServiceImpl.getAllWizardInfo();
+    }
+
+    @Override
     @GetMapping("find-id/{id}")
     public WizardInfo findWizardInfoById(@PathVariable String id) {
         return RTWizardInfoServiceImpl.getWizardInfoById(id);
     }
+
 }

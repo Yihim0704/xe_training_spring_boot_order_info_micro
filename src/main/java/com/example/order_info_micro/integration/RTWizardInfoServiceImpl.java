@@ -14,6 +14,16 @@ public class RTWizardInfoServiceImpl implements RTWizardInfoService {
     RestTemplate restTemplate = new RestTemplate();
 
     @Override
+    public WizardInfo[] getAllWizardInfo() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        ResponseEntity<WizardInfo[]> response = restTemplate.exchange(ApiUrl.WIZARD_INFO_GET_ALL_URL, HttpMethod.GET, entity, WizardInfo[].class);
+        WizardInfo[] allWizardInfo = response.getBody();
+        return allWizardInfo;
+    }
+
+    @Override
     public WizardInfo getWizardInfoById(String id) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
