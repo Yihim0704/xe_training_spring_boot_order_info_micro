@@ -98,7 +98,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         // To validate wizard info
         Map<String, String> validWizardInfo = detailsValidationImpl.wizardInfoDetailsValidation(orderInfo.getWizardId(), orderInfo.getWizardName());
         // To validate magic wand catalogue
-        Map<String, String> validMagicWandCatalogue = detailsValidationImpl.magicWandCatalogueDetailsValidation(orderInfo.getMagicWandCatalogueId(), orderInfo.getMagicWandCatalogueName(), orderInfo.getWizardId());
+        Map<String, String> validMagicWandCatalogue = detailsValidationImpl.magicWandCatalogueDetailsValidationOnUpdate(orderInfo.getMagicWandCatalogueId(), orderInfo.getMagicWandCatalogueName(), orderInfo.getWizardId());
         if (validWizardInfo.get("Result").equalsIgnoreCase("Wizard details are valid.")) {
             if (validMagicWandCatalogue.get("Result").equalsIgnoreCase("Magic wand catalogue details are valid and wizard's age is applicable.")) {
                 OrderInfo currentOderInfo = getOrderInfoById(id);

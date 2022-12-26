@@ -68,10 +68,43 @@ public class DetailsValidationImpl implements DetailsValidation {
                         magicWandCatalogueDetailsResult.put("HttpStatus", HttpStatus.OK.toString());
                         return magicWandCatalogueDetailsResult;
                     } else {
-                        magicWandCatalogueDetailsResult.put("Result", "Magic wand catalogue is out of stock.");
+                        magicWandCatalogueDetailsResult.put("Result", "Magic wand catalogue details are valid and wizard's age is applicable but magic wand catalogue is out of stock.");
                         magicWandCatalogueDetailsResult.put("HttpStatus", HttpStatus.OK.toString());
                         return magicWandCatalogueDetailsResult;
                     }
+                } else {
+                    magicWandCatalogueDetailsResult.put("Result", "Magic wand catalogue details are valid but wizard's age is not applicable.");
+                    magicWandCatalogueDetailsResult.put("HttpStatus", HttpStatus.OK.toString());
+                    return magicWandCatalogueDetailsResult;
+                }
+            } else {
+                magicWandCatalogueDetailsResult.put("Result", "Magic wand catalogue name is not match, try check magic wand catalogue name whether has changed to a new name.");
+                magicWandCatalogueDetailsResult.put("HttpStatus", HttpStatus.NOT_FOUND.toString());
+                return magicWandCatalogueDetailsResult;
+            }
+        } else {
+            magicWandCatalogueDetailsResult.put("Result", "Magic wand catalogue Id is not match.");
+            magicWandCatalogueDetailsResult.put("HttpStatus", HttpStatus.NOT_FOUND.toString());
+            return magicWandCatalogueDetailsResult;
+        }
+    }
+
+    @Override
+    public Map<String, String> magicWandCatalogueDetailsValidationOnUpdate(String id, String name, String wizardInfoId) {
+        Map<String, String> magicWandCatalogueDetailsResult = new HashMap<>();
+        MagicWandCatalogue existMagicWandCatalogue = rtMagicWandCatalogueServiceImpl.getMagicWandCatalogueById(id);
+        WizardInfo existWizardInfo = rtWizardInfoServiceImpl.getWizardInfoById(wizardInfoId);
+        String existMagicWandCatalogueId = existMagicWandCatalogue.getId();
+        String existMagicWandCatalogueName = existMagicWandCatalogue.getName();
+        int existMagicWandCatalogueStock = existMagicWandCatalogue.getStock();
+        int existMagicWandCatalogueAgeLimit = existMagicWandCatalogue.getAgeLimit();
+        int existWizardInfoAge = existWizardInfo.getAge();
+        if (id.equals(existMagicWandCatalogueId)) {
+            if (name.equalsIgnoreCase(existMagicWandCatalogueName)) {
+                if (existWizardInfoAge <= existMagicWandCatalogueAgeLimit) {
+                    magicWandCatalogueDetailsResult.put("Result", "Magic wand catalogue details are valid and wizard's age is applicable.");
+                    magicWandCatalogueDetailsResult.put("HttpStatus", HttpStatus.OK.toString());
+                    return magicWandCatalogueDetailsResult;
                 } else {
                     magicWandCatalogueDetailsResult.put("Result", "Magic wand catalogue details are valid but wizard's age is not applicable.");
                     magicWandCatalogueDetailsResult.put("HttpStatus", HttpStatus.OK.toString());
