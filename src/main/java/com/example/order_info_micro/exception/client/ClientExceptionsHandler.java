@@ -43,7 +43,7 @@ public class ClientExceptionsHandler {
     }
 
     @ExceptionHandler(MagicWandCatalogueNotValidException.class)
-    public Map<String, Object> handleMethodArgumentNotValidException(MagicWandCatalogueNotValidException ex) {
+    public Map<String, Object> handleMagicWandCatalogueNotValidException(MagicWandCatalogueNotValidException ex) {
         Map<String, Object> message = new HashMap<>();
         String magicWandCatalogueNotValidExceptionTraceId = generateTraceId();
         message.put("code", ex.getHttpStatus());

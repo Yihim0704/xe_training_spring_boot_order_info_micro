@@ -27,7 +27,7 @@ public class OrderQuantityUpdateImpl implements OrderQuantityUpdate {
             int stockDecrement = updatedQuantity - currentOrderInfoQuantity;
             int updatedStock = currentMagicWandCatalogueStock - stockDecrement;
             if (updatedStock < 0) {
-                throw new MagicWandCatalogueNotValidException("Magic wand catalogue's stock is not sufficient. Availability: " + currentMagicWandCatalogueStock, HttpStatus.BAD_REQUEST.toString());
+                throw new MagicWandCatalogueNotValidException("Magic wand catalogue's stock is not sufficient. " + "(Current: " + currentOrderInfoQuantity + ", Available: " + currentMagicWandCatalogueStock + ")", HttpStatus.BAD_REQUEST.toString());
             }
             currentMagicWandCatalogue.setStock(updatedStock);
             return currentMagicWandCatalogue;
@@ -44,7 +44,7 @@ public class OrderQuantityUpdateImpl implements OrderQuantityUpdate {
         MagicWandCatalogue currentMagicWandCatalogue = rtMagicWandCatalogueServiceImpl.getMagicWandCatalogueById(magicWandCatalogueId);
         int currentMagicWandCatalogueStock = currentMagicWandCatalogue.getStock();
         if (savedQuantity > currentMagicWandCatalogueStock) {
-            throw new MagicWandCatalogueNotValidException("Magic wand catalogue's stock is not sufficient. Availability: " + currentMagicWandCatalogueStock, HttpStatus.BAD_REQUEST.toString());
+            throw new MagicWandCatalogueNotValidException("Magic wand catalogue's stock is not sufficient. " + "(Selected: " + savedQuantity + ", Available: " + currentMagicWandCatalogueStock + ")", HttpStatus.BAD_REQUEST.toString());
         } else {
             int updatedStock = currentMagicWandCatalogueStock - savedQuantity;
             currentMagicWandCatalogue.setStock(updatedStock);
@@ -52,4 +52,15 @@ public class OrderQuantityUpdateImpl implements OrderQuantityUpdate {
         }
     }
 
+    @Override
+    public MagicWandCatalogue updateMagicWandCatalogueStockOnDeleteOrderInfo(String magicWandCatalogueId, int currentOrderQuantity) {
+        MagicWandCatalogue currentMagicWandCatalogue = rtMagicWandCatalogueServiceImpl.getMagicWandCatalogueById(magicWandCatalogueId);
+        if (currentMagicWandCatalogue != null) {
+            int currentMagicWandCatalogueStock = currentMagicWandCatalogue.getStock();
+            int updateMagicWandCatalogueStock = currentMagicWandCatalogueStock + currentOrderQuantity;
+            currentMagicWandCatalogue.setStock(updateMagicWandCatalogueStock);
+            return currentMagicWandCatalogue;
+        }
+        return null;
+    }
 }

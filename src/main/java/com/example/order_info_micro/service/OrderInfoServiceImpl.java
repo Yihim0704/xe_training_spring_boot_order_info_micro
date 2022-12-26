@@ -44,9 +44,9 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     @Override
     public OrderInfo saveOrderInfo(OrderInfo orderInfo) {
         // To validate wizard info
-        Map<String, String> validWizardInfo = detailsValidationImpl.wizardInfoDetailsValidation(orderInfo.getWizardId(), orderInfo.getWizardName());
+        Map<String, String> validWizardInfo = detailsValidationImpl.wizardInfoDetailsValidation(orderInfo.getWizardId(), orderInfo.getWizardName().trim());
         // To validate magic wand catalogue
-        Map<String, String> validMagicWandCatalogue = detailsValidationImpl.magicWandCatalogueDetailsValidation(orderInfo.getMagicWandCatalogueId(), orderInfo.getMagicWandCatalogueName(), orderInfo.getWizardId());
+        Map<String, String> validMagicWandCatalogue = detailsValidationImpl.magicWandCatalogueDetailsValidation(orderInfo.getMagicWandCatalogueId(), orderInfo.getMagicWandCatalogueName().trim(), orderInfo.getWizardId());
         if (validWizardInfo.get("Result").equalsIgnoreCase("Wizard details are valid.")) {
             if (validMagicWandCatalogue.get("Result").equalsIgnoreCase("Magic wand catalogue details are valid and wizard's age is applicable.")) {
                 // If both validations passed, proceed to check duplicated data
@@ -96,9 +96,9 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             throw new OrderInfoIdNotFoundException("Order info does not exist.");
         }
         // To validate wizard info
-        Map<String, String> validWizardInfo = detailsValidationImpl.wizardInfoDetailsValidation(orderInfo.getWizardId(), orderInfo.getWizardName());
+        Map<String, String> validWizardInfo = detailsValidationImpl.wizardInfoDetailsValidation(orderInfo.getWizardId(), orderInfo.getWizardName().trim());
         // To validate magic wand catalogue
-        Map<String, String> validMagicWandCatalogue = detailsValidationImpl.magicWandCatalogueDetailsValidationOnUpdate(orderInfo.getMagicWandCatalogueId(), orderInfo.getMagicWandCatalogueName(), orderInfo.getWizardId());
+        Map<String, String> validMagicWandCatalogue = detailsValidationImpl.magicWandCatalogueDetailsValidationOnUpdate(orderInfo.getMagicWandCatalogueId(), orderInfo.getMagicWandCatalogueName().trim(), orderInfo.getWizardId());
         if (validWizardInfo.get("Result").equalsIgnoreCase("Wizard details are valid.")) {
             if (validMagicWandCatalogue.get("Result").equalsIgnoreCase("Magic wand catalogue details are valid and wizard's age is applicable.")) {
                 OrderInfo currentOderInfo = getOrderInfoById(id);
@@ -120,6 +120,11 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     public String deleteOrderInfoById(String id) {
         if (!orderInfoRepository.findById(id).isPresent()) {
             throw new OrderInfoIdNotFoundException("Order info does not exist.");
+        }
+        OrderInfo currentOrderInfo = getOrderInfoById(id);
+        MagicWandCatalogue updatedMagicWandCatalogueStock = orderQuantityUpdateImpl.updateMagicWandCatalogueStockOnDeleteOrderInfo(currentOrderInfo.getMagicWandCatalogueId(), currentOrderInfo.getQuantity());
+        if (updatedMagicWandCatalogueStock != null) {
+            rtMagicWandCatalogueServiceImpl.updateMagicWandCatalogueById(currentOrderInfo.getMagicWandCatalogueId(), updatedMagicWandCatalogueStock);
         }
         orderInfoRepository.deleteById(id);
         return "Order info has been deleted successfully !\tID: " + id;

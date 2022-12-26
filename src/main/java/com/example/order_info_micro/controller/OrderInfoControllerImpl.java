@@ -40,7 +40,7 @@ public class OrderInfoControllerImpl implements OrderInfoController {
 
     @Override
     @DeleteMapping("delete-id/{id}")
-    public String removeOrderInfoById(String id) {
+    public String removeOrderInfoById(@PathVariable String id) {
         return orderInfoServiceImpl.deleteOrderInfoById(id);
     }
 }
