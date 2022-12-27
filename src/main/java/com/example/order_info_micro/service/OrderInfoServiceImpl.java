@@ -103,12 +103,23 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         if (validWizardInfo.get("Result").equalsIgnoreCase("Wizard details are valid.")) {
             if (validMagicWandCatalogue.get("Result").equalsIgnoreCase("Magic wand catalogue details are valid and wizard's age is applicable.")) {
                 OrderInfo currentOderInfo = getOrderInfoById(id);
-                MagicWandCatalogue updatedMagicWandCatalogueStock = orderQuantityUpdateImpl.updateMagicWandCatalogueStockOnUpdateOrderInfo(orderInfo.getMagicWandCatalogueId(), orderInfo.getQuantity(), currentOderInfo);
-                rtMagicWandCatalogueServiceImpl.updateMagicWandCatalogueById(orderInfo.getMagicWandCatalogueId(), updatedMagicWandCatalogueStock);
-                List<OrderInfo> currentAllOrderInfo = getAllOrderInfo();
-                nameUpdateImpl.updateOrderInfoWizardAndMagicWandName(currentAllOrderInfo, currentOderInfo, orderInfo);
-                currentOderInfo.setQuantity(orderInfo.getQuantity());
-                return orderInfoRepository.save(currentOderInfo);
+                if (currentOderInfo.getWizardId().equals(orderInfo.getWizardId()) && currentOderInfo.getMagicWandCatalogueId().equals(orderInfo.getMagicWandCatalogueId())) {
+                    MagicWandCatalogue updatedMagicWandCatalogueStock = orderQuantityUpdateImpl.updateMagicWandCatalogueStockOnUpdateOrderInfo(orderInfo.getMagicWandCatalogueId(), orderInfo.getQuantity(), currentOderInfo);
+                    rtMagicWandCatalogueServiceImpl.updateMagicWandCatalogueById(orderInfo.getMagicWandCatalogueId(), updatedMagicWandCatalogueStock);
+                    List<OrderInfo> currentAllOrderInfo = getAllOrderInfo();
+                    nameUpdateImpl.updateOrderInfoWizardAndMagicWandName(currentAllOrderInfo, currentOderInfo, orderInfo);
+                    currentOderInfo.setQuantity(orderInfo.getQuantity());
+                    return orderInfoRepository.save(currentOderInfo);
+                } else {
+                    List<OrderInfo> existOrderInfo = orderInfoRepository.findOrderInfoByWizardId(orderInfo.getWizardId());
+                    // Check the list of data whether a data is consisting both Ids
+                    for (OrderInfo info : existOrderInfo) {
+                        if (info.getWizardId().equals(orderInfo.getWizardId()) && info.getMagicWandCatalogueId().equals(orderInfo.getMagicWandCatalogueId())) {
+                            throw new OrderInfoExistException("Order info exist, consider update it with order Id: " + info.getId());
+                        }
+                    }
+                }
+                throw new NoOrderInfoFoundException("Consider adding a new order info with the respective data.");
             } else {
                 throw new MagicWandCatalogueNotValidException(validMagicWandCatalogue.get("Result"), validMagicWandCatalogue.get("HttpStatus"));
             }
