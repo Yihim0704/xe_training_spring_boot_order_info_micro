@@ -4,6 +4,7 @@ import com.example.order_info_micro.business.DetailsValidationImpl;
 import com.example.order_info_micro.business.NameUpdateImpl;
 import com.example.order_info_micro.business.OrderQuantityUpdateImpl;
 import com.example.order_info_micro.database.OrderInfoRepository;
+import com.example.order_info_micro.exception.client.MagicWandCatalogueNotExistException;
 import com.example.order_info_micro.exception.client.MagicWandCatalogueNotValidException;
 import com.example.order_info_micro.exception.client.WizardInfoNotValidException;
 import com.example.order_info_micro.exception.server.NoOrderInfoFoundException;
@@ -119,14 +120,18 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     @Override
     public String deleteOrderInfoById(String id) {
         if (!orderInfoRepository.findById(id).isPresent()) {
-            throw new OrderInfoIdNotFoundException("Order info does not exist.");
+            throw new OrderInfoIdNotFoundException("Order info Id does not exist.");
         }
         OrderInfo currentOrderInfo = getOrderInfoById(id);
-        MagicWandCatalogue updatedMagicWandCatalogueStock = orderQuantityUpdateImpl.updateMagicWandCatalogueStockOnDeleteOrderInfo(currentOrderInfo.getMagicWandCatalogueId(), currentOrderInfo.getQuantity());
-        if (updatedMagicWandCatalogueStock != null) {
-            rtMagicWandCatalogueServiceImpl.updateMagicWandCatalogueById(currentOrderInfo.getMagicWandCatalogueId(), updatedMagicWandCatalogueStock);
+        try {
+            MagicWandCatalogue updatedMagicWandCatalogueStock = orderQuantityUpdateImpl.updateMagicWandCatalogueStockOnDeleteOrderInfo(currentOrderInfo.getMagicWandCatalogueId(), currentOrderInfo.getQuantity());
+            if (updatedMagicWandCatalogueStock != null) {
+                rtMagicWandCatalogueServiceImpl.updateMagicWandCatalogueById(currentOrderInfo.getMagicWandCatalogueId(), updatedMagicWandCatalogueStock);
+                orderInfoRepository.deleteById(id);
+            }
+        } catch (MagicWandCatalogueNotExistException e) {
+            orderInfoRepository.deleteById(id);
         }
-        orderInfoRepository.deleteById(id);
         return "Order info has been deleted successfully !\tID: " + id;
     }
 }
