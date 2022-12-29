@@ -102,8 +102,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         Map<String, String> validMagicWandCatalogue = detailsValidationImpl.magicWandCatalogueDetailsValidationOnUpdate(orderInfo.getMagicWandCatalogueId(), orderInfo.getMagicWandCatalogueName().trim(), orderInfo.getWizardId());
         if (validWizardInfo.get("Result").equalsIgnoreCase("Wizard details are valid.")) {
             if (validMagicWandCatalogue.get("Result").equalsIgnoreCase("Magic wand catalogue details are valid and wizard's age is applicable.")) {
+                // If both validations passed, proceed to update order info
                 OrderInfo currentOderInfo = getOrderInfoById(id);
                 if (currentOderInfo.getWizardId().equals(orderInfo.getWizardId()) && currentOderInfo.getMagicWandCatalogueId().equals(orderInfo.getMagicWandCatalogueId())) {
+                    // If both wizard and magic wand Ids are matched with the current order info, proceed to update magic wand stock and update
                     MagicWandCatalogue updatedMagicWandCatalogueStock = orderQuantityUpdateImpl.updateMagicWandCatalogueStockOnUpdateOrderInfo(orderInfo.getMagicWandCatalogueId(), orderInfo.getQuantity(), currentOderInfo);
                     rtMagicWandCatalogueServiceImpl.updateMagicWandCatalogueById(orderInfo.getMagicWandCatalogueId(), updatedMagicWandCatalogueStock);
                     List<OrderInfo> currentAllOrderInfo = getAllOrderInfo();
@@ -111,6 +113,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
                     currentOderInfo.setQuantity(orderInfo.getQuantity());
                     return orderInfoRepository.save(currentOderInfo);
                 } else {
+                    // Else, proceed to suggesting user to update exist order info that contains both Ids
                     List<OrderInfo> existOrderInfo = orderInfoRepository.findOrderInfoByWizardId(orderInfo.getWizardId());
                     // Check the list of data whether a data is consisting both Ids
                     for (OrderInfo info : existOrderInfo) {
@@ -119,6 +122,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
                         }
                     }
                 }
+                // If both Ids are not found in the order info table, suggest user to add a new one
                 throw new NoOrderInfoFoundException("Consider adding a new order info with the respective data.");
             } else {
                 throw new MagicWandCatalogueNotValidException(validMagicWandCatalogue.get("Result"), validMagicWandCatalogue.get("HttpStatus"));
@@ -135,12 +139,14 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         }
         OrderInfo currentOrderInfo = getOrderInfoById(id);
         try {
+            // If the magic wand catalogue has not been deleted, then proceed to update the stock before deleting
             MagicWandCatalogue updatedMagicWandCatalogueStock = orderQuantityUpdateImpl.updateMagicWandCatalogueStockOnDeleteOrderInfo(currentOrderInfo.getMagicWandCatalogueId(), currentOrderInfo.getQuantity());
             if (updatedMagicWandCatalogueStock != null) {
                 rtMagicWandCatalogueServiceImpl.updateMagicWandCatalogueById(currentOrderInfo.getMagicWandCatalogueId(), updatedMagicWandCatalogueStock);
                 orderInfoRepository.deleteById(id);
             }
         } catch (MagicWandCatalogueNotExistException e) {
+            // If the magic wand catalogue has been deleted, proceed to normal deletion
             orderInfoRepository.deleteById(id);
         }
         return "Order info has been deleted successfully !\tID: " + id;
