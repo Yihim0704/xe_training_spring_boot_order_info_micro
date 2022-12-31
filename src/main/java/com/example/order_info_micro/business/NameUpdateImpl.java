@@ -1,6 +1,6 @@
 package com.example.order_info_micro.business;
 
-import com.example.order_info_micro.model.OrderInfo;
+import com.example.order_info_micro.entity.OrderInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

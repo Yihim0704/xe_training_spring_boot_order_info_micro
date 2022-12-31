@@ -3,10 +3,15 @@ package com.example.order_info_micro.exception.client;
 import brave.Span;
 import brave.Tracer;
 import com.example.order_info_micro.exception.ExceptionFormat;
+import com.example.order_info_micro.exception.client.MagicWandCatalogue.MagicWandCatalogueNotExistException;
+import com.example.order_info_micro.exception.client.MagicWandCatalogue.MagicWandCatalogueNotValidException;
+import com.example.order_info_micro.exception.client.WizardInfo.WizardInfoNotExistException;
+import com.example.order_info_micro.exception.client.WizardInfo.WizardInfoNotValidException;
 import com.example.order_info_micro.exception.server.ServerExceptionsHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -21,7 +26,7 @@ public class ClientExceptionsHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ServerExceptionsHandler.class);
 
-    public String generateTraceId() {
+    public String getTraceId() {
         String traceId = null;
         Span span = tracer.currentSpan();
         if (span != null) {
@@ -30,10 +35,34 @@ public class ClientExceptionsHandler {
         return traceId;
     }
 
+    @ExceptionHandler(ClientErrorException.class)
+    public Map<String, Object> handleClientErrorException(ClientErrorException ex) {
+        Map<String, Object> message = new HashMap<>();
+        String clientErrorExceptionTraceId = getTraceId();
+        message.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        message.put("message", ex.getMessage());
+        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), clientErrorExceptionTraceId, message);
+        logger.info("ClientErrorExceptionTraceId: {}", clientErrorExceptionTraceId);
+        logger.info(String.valueOf(exceptionFormat.toFormat()));
+        return exceptionFormat.toFormat();
+    }
+
+    @ExceptionHandler(RestClientErrorException.class)
+    public Map<String, Object> handleRestClientErrorException(RestClientErrorException ex) {
+        Map<String, Object> message = new HashMap<>();
+        String restClientErrorExceptionTraceId = getTraceId();
+        message.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        message.put("message", ex.getMessage());
+        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), restClientErrorExceptionTraceId, message);
+        logger.info("RestClientErrorExceptionTraceId: {}", restClientErrorExceptionTraceId);
+        logger.info(String.valueOf(exceptionFormat.toFormat()));
+        return exceptionFormat.toFormat();
+    }
+
     @ExceptionHandler(WizardInfoNotValidException.class)
     public Map<String, Object> handleWizardInfoNotValidException(WizardInfoNotValidException ex) {
         Map<String, Object> message = new HashMap<>();
-        String wizardInfoNotValidExceptionTraceId = generateTraceId();
+        String wizardInfoNotValidExceptionTraceId = getTraceId();
         message.put("code", ex.getHttpStatus());
         message.put("message", ex.getMessage());
         ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), wizardInfoNotValidExceptionTraceId, message);
@@ -45,7 +74,7 @@ public class ClientExceptionsHandler {
     @ExceptionHandler(MagicWandCatalogueNotValidException.class)
     public Map<String, Object> handleMagicWandCatalogueNotValidException(MagicWandCatalogueNotValidException ex) {
         Map<String, Object> message = new HashMap<>();
-        String magicWandCatalogueNotValidExceptionTraceId = generateTraceId();
+        String magicWandCatalogueNotValidExceptionTraceId = getTraceId();
         message.put("code", ex.getHttpStatus());
         message.put("message", ex.getMessage());
         ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), magicWandCatalogueNotValidExceptionTraceId, message);
@@ -54,34 +83,10 @@ public class ClientExceptionsHandler {
         return exceptionFormat.toFormat();
     }
 
-    @ExceptionHandler(NoWizardInfoFoundException.class)
-    public Map<String, Object> handleNoWizardInfoFoundException(NoWizardInfoFoundException ex) {
-        Map<String, Object> message = new HashMap<>();
-        String noWizardInfoFoundExceptionTraceId = generateTraceId();
-        message.put("code", ex.getHttpStatus());
-        message.put("message", ex.getMessage());
-        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), noWizardInfoFoundExceptionTraceId, message);
-        logger.info("NoWizardInfoFoundExceptionTraceId: {}", noWizardInfoFoundExceptionTraceId);
-        logger.info(String.valueOf(exceptionFormat.toFormat()));
-        return exceptionFormat.toFormat();
-    }
-
-    @ExceptionHandler(NoMagicWandCatalogueFoundException.class)
-    public Map<String, Object> handleNoMagicWandCatalogueFoundException(NoMagicWandCatalogueFoundException ex) {
-        Map<String, Object> message = new HashMap<>();
-        String noMagicWandCatalogueFoundExceptionTraceId = generateTraceId();
-        message.put("code", ex.getHttpStatus());
-        message.put("message", ex.getMessage());
-        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), noMagicWandCatalogueFoundExceptionTraceId, message);
-        logger.info("NoMagicWandCatalogueFoundExceptionTraceId: {}", noMagicWandCatalogueFoundExceptionTraceId);
-        logger.info(String.valueOf(exceptionFormat.toFormat()));
-        return exceptionFormat.toFormat();
-    }
-
     @ExceptionHandler(MagicWandCatalogueNotExistException.class)
     public Map<String, Object> handleMagicWandCatalogueNotExistException(MagicWandCatalogueNotExistException ex) {
         Map<String, Object> message = new HashMap<>();
-        String magicWandCatalogueNotExistExceptionTraceId = generateTraceId();
+        String magicWandCatalogueNotExistExceptionTraceId = getTraceId();
         message.put("code", ex.getHttpStatus());
         message.put("message", ex.getMessage());
         ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), magicWandCatalogueNotExistExceptionTraceId, message);
@@ -93,7 +98,7 @@ public class ClientExceptionsHandler {
     @ExceptionHandler(WizardInfoNotExistException.class)
     public Map<String, Object> handleWizardInfoNotExistException(WizardInfoNotExistException ex) {
         Map<String, Object> message = new HashMap<>();
-        String wizardInfoNotExistExceptionTraceId = generateTraceId();
+        String wizardInfoNotExistExceptionTraceId = getTraceId();
         message.put("code", ex.getHttpStatus());
         message.put("message", ex.getMessage());
         ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), wizardInfoNotExistExceptionTraceId, message);

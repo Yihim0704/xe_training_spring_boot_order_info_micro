@@ -1,6 +1,6 @@
 package com.example.order_info_micro.business;
 
-import com.example.order_info_micro.model.OrderInfo;
+import com.example.order_info_micro.entity.OrderInfo;
 
 import java.util.List;
 

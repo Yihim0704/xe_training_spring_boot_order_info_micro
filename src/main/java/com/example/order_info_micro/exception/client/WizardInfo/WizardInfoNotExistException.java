@@ -1,13 +1,13 @@
-package com.example.order_info_micro.exception.client;
+package com.example.order_info_micro.exception.client.WizardInfo;
 
 public class WizardInfoNotExistException extends RuntimeException {
     private String message;
-    private String httpStatus;
+    private int httpStatus;
 
     public WizardInfoNotExistException() {
     }
 
-    public WizardInfoNotExistException(String message, String httpStatus) {
+    public WizardInfoNotExistException(String message, int httpStatus) {
         this.message = message;
         this.httpStatus = httpStatus;
     }
@@ -21,11 +21,11 @@ public class WizardInfoNotExistException extends RuntimeException {
         this.message = message;
     }
 
-    public String getHttpStatus() {
+    public int getHttpStatus() {
         return httpStatus;
     }
 
-    public void setHttpStatus(String httpStatus) {
+    public void setHttpStatus(int httpStatus) {
         this.httpStatus = httpStatus;
     }
 }
