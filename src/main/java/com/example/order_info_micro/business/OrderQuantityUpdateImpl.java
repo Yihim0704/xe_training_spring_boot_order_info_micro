@@ -3,7 +3,7 @@ package com.example.order_info_micro.business;
 import com.example.order_info_micro.entity.OrderInfo;
 import com.example.order_info_micro.exception.client.MagicWandCatalogue.MagicWandCatalogueNotValidException;
 import com.example.order_info_micro.integration.RTMagicWandCatalogueService;
-import com.example.order_info_micro.model.MagicWandCatalogue;
+import com.example.order_info_micro.model.MagicWandCatalogueModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,10 @@ public class OrderQuantityUpdateImpl implements OrderQuantityUpdate {
     RTMagicWandCatalogueService rtMagicWandCatalogueService;
 
     @Override
-    public MagicWandCatalogue updateMagicWandCatalogueStockOnUpdateOrderInfo(String magicWandCatalogueId, int updatedQuantity, OrderInfo currentOrderInfo) throws HttpRequestMethodNotSupportedException {
+    public MagicWandCatalogueModel updateMagicWandCatalogueStockOnUpdateOrderInfo(String magicWandCatalogueId, int updatedQuantity, OrderInfo currentOrderInfo) throws HttpRequestMethodNotSupportedException {
         logger.info("Server OrderQuantityUpdate.updateMagicWandCatalogueStockOnUpdateOrderInfo");
-        MagicWandCatalogue currentMagicWandCatalogue = rtMagicWandCatalogueService.getMagicWandCatalogueById(magicWandCatalogueId);
-        int currentMagicWandCatalogueStock = currentMagicWandCatalogue.getStock();
+        MagicWandCatalogueModel currentMagicWandCatalogueModel = rtMagicWandCatalogueService.getMagicWandCatalogueById(magicWandCatalogueId);
+        int currentMagicWandCatalogueStock = currentMagicWandCatalogueModel.getStock();
         int currentOrderInfoQuantity = currentOrderInfo.getQuantity();
         if (updatedQuantity > currentOrderInfoQuantity) {
             int stockDecrement = updatedQuantity - currentOrderInfoQuantity;
@@ -31,39 +31,39 @@ public class OrderQuantityUpdateImpl implements OrderQuantityUpdate {
             if (updatedStock < 0) {
                 throw new MagicWandCatalogueNotValidException("Magic wand catalogue's stock is not sufficient. " + "(Current: " + currentOrderInfoQuantity + ", Available: " + currentMagicWandCatalogueStock + ")", HttpStatus.BAD_REQUEST.value());
             }
-            currentMagicWandCatalogue.setStock(updatedStock);
-            return currentMagicWandCatalogue;
+            currentMagicWandCatalogueModel.setStock(updatedStock);
+            return currentMagicWandCatalogueModel;
         } else {
             int stockIncrement = currentOrderInfoQuantity - updatedQuantity;
             int updatedStock = currentMagicWandCatalogueStock + stockIncrement;
-            currentMagicWandCatalogue.setStock(updatedStock);
-            return currentMagicWandCatalogue;
+            currentMagicWandCatalogueModel.setStock(updatedStock);
+            return currentMagicWandCatalogueModel;
         }
     }
 
     @Override
-    public MagicWandCatalogue updateMagicWandCatalogueStockOnSaveOrderInfo(String magicWandCatalogueId, int savedQuantity) throws HttpRequestMethodNotSupportedException {
+    public MagicWandCatalogueModel updateMagicWandCatalogueStockOnSaveOrderInfo(String magicWandCatalogueId, int savedQuantity) throws HttpRequestMethodNotSupportedException {
         logger.info("Server OrderQuantityUpdate.updateMagicWandCatalogueStockOnSaveOrderInfo");
-        MagicWandCatalogue currentMagicWandCatalogue = rtMagicWandCatalogueService.getMagicWandCatalogueById(magicWandCatalogueId);
-        int currentMagicWandCatalogueStock = currentMagicWandCatalogue.getStock();
+        MagicWandCatalogueModel currentMagicWandCatalogueModel = rtMagicWandCatalogueService.getMagicWandCatalogueById(magicWandCatalogueId);
+        int currentMagicWandCatalogueStock = currentMagicWandCatalogueModel.getStock();
         if (savedQuantity > currentMagicWandCatalogueStock) {
             throw new MagicWandCatalogueNotValidException("Magic wand catalogue's stock is not sufficient. " + "(Selected: " + savedQuantity + ", Available: " + currentMagicWandCatalogueStock + ")", HttpStatus.BAD_REQUEST.value());
         } else {
             int updatedStock = currentMagicWandCatalogueStock - savedQuantity;
-            currentMagicWandCatalogue.setStock(updatedStock);
-            return currentMagicWandCatalogue;
+            currentMagicWandCatalogueModel.setStock(updatedStock);
+            return currentMagicWandCatalogueModel;
         }
     }
 
     @Override
-    public MagicWandCatalogue updateMagicWandCatalogueStockOnDeleteOrderInfo(String magicWandCatalogueId, int currentOrderQuantity) throws HttpRequestMethodNotSupportedException {
+    public MagicWandCatalogueModel updateMagicWandCatalogueStockOnDeleteOrderInfo(String magicWandCatalogueId, int currentOrderQuantity) throws HttpRequestMethodNotSupportedException {
         logger.info("Server OrderQuantityUpdate.updateMagicWandCatalogueStockOnDeleteOrderInfo");
-        MagicWandCatalogue currentMagicWandCatalogue = rtMagicWandCatalogueService.getMagicWandCatalogueById(magicWandCatalogueId);
-        if (currentMagicWandCatalogue != null) {
-            int currentMagicWandCatalogueStock = currentMagicWandCatalogue.getStock();
+        MagicWandCatalogueModel currentMagicWandCatalogueModel = rtMagicWandCatalogueService.getMagicWandCatalogueById(magicWandCatalogueId);
+        if (currentMagicWandCatalogueModel != null) {
+            int currentMagicWandCatalogueStock = currentMagicWandCatalogueModel.getStock();
             int updateMagicWandCatalogueStock = currentMagicWandCatalogueStock + currentOrderQuantity;
-            currentMagicWandCatalogue.setStock(updateMagicWandCatalogueStock);
-            return currentMagicWandCatalogue;
+            currentMagicWandCatalogueModel.setStock(updateMagicWandCatalogueStock);
+            return currentMagicWandCatalogueModel;
         }
         return null;
     }

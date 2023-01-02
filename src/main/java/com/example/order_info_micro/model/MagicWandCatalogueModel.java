@@ -5,10 +5,10 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class WizardInfo {
+public class MagicWandCatalogueModel {
     private UUID id;
     private String name;
-    private int age;
-    private String joinedDate;
-    private boolean active;
+    private String description;
+    private int ageLimit;
+    private int stock;
 }

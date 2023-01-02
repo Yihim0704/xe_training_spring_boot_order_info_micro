@@ -2,7 +2,7 @@ package com.example.order_info_micro.controller;
 
 import com.example.order_info_micro.dto.WizardInfoDto;
 import com.example.order_info_micro.integration.RTWizardInfoService;
-import com.example.order_info_micro.model.WizardInfo;
+import com.example.order_info_micro.model.WizardInfoModel;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class RTWizardInfoController {
         logger.info("Client RTWizardInfoController.findAllWizardInfo");
         return rtWizardInfoService.getAllWizardInfo()
                 .stream()
-                .map(wizardInfo -> modelMapper.map(wizardInfo, WizardInfoDto.class))
+                .map(wizardInfoModel -> modelMapper.map(wizardInfoModel, WizardInfoDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -42,9 +42,9 @@ public class RTWizardInfoController {
     public ResponseEntity<WizardInfoDto> findWizardInfoById(@PathVariable String id) throws HttpRequestMethodNotSupportedException {
         logger.info("Client RTWizardInfoController.findWizardInfoById");
 
-        WizardInfo wizardInfo = rtWizardInfoService.getWizardInfoById(id);
+        WizardInfoModel wizardInfoModel = rtWizardInfoService.getWizardInfoById(id);
 
-        WizardInfoDto wizardInfoResponse = modelMapper.map(wizardInfo, WizardInfoDto.class);
+        WizardInfoDto wizardInfoResponse = modelMapper.map(wizardInfoModel, WizardInfoDto.class);
 
         return ResponseEntity.ok().body(wizardInfoResponse);
     }

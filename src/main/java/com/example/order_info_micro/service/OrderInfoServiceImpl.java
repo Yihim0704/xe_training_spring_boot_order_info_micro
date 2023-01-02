@@ -11,7 +11,7 @@ import com.example.order_info_micro.exception.client.MagicWandCatalogue.MagicWan
 import com.example.order_info_micro.exception.client.WizardInfo.WizardInfoNotValidException;
 import com.example.order_info_micro.exception.server.*;
 import com.example.order_info_micro.integration.RTMagicWandCatalogueService;
-import com.example.order_info_micro.model.MagicWandCatalogue;
+import com.example.order_info_micro.model.MagicWandCatalogueModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +67,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
                     }
                     // If not duplicated, then proceed to normal saving
                     // When saving, update the magic wand catalogue stock as well
-                    MagicWandCatalogue updateMagicWandCatalogueStock = orderQuantityUpdate.updateMagicWandCatalogueStockOnSaveOrderInfo(orderInfo.getMagicWandCatalogueId().toString().trim(), orderInfo.getQuantity());
-                    rtMagicWandCatalogueService.updateMagicWandCatalogueById(orderInfo.getMagicWandCatalogueId().toString().trim(), updateMagicWandCatalogueStock);
+                    MagicWandCatalogueModel updateMagicWandCatalogueModelStock = orderQuantityUpdate.updateMagicWandCatalogueStockOnSaveOrderInfo(orderInfo.getMagicWandCatalogueId().toString().trim(), orderInfo.getQuantity());
+                    rtMagicWandCatalogueService.updateMagicWandCatalogueById(orderInfo.getMagicWandCatalogueId().toString().trim(), updateMagicWandCatalogueModelStock);
                     orderInfo.setWizardId(UUID.fromString(validatedOrderInfo.getWizardId().toString().trim()));
                     orderInfo.setWizardName(validatedOrderInfo.getWizardName().trim());
                     orderInfo.setMagicWandCatalogueId(UUID.fromString(validatedOrderInfo.getMagicWandCatalogueId().toString().trim()));
@@ -132,8 +132,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
                     // If both validations passed, proceed to update order info
                     if (currentOderInfo.getWizardId().equals(orderInfo.getWizardId()) && currentOderInfo.getMagicWandCatalogueId().equals(orderInfo.getMagicWandCatalogueId())) {
                         // If both wizard and magic wand Ids are matched with the current order info, proceed to update magic wand stock, both names and update order info
-                        MagicWandCatalogue updatedMagicWandCatalogueStock = orderQuantityUpdate.updateMagicWandCatalogueStockOnUpdateOrderInfo(orderInfo.getMagicWandCatalogueId().toString().trim(), orderInfo.getQuantity(), currentOderInfo);
-                        rtMagicWandCatalogueService.updateMagicWandCatalogueById(orderInfo.getMagicWandCatalogueId().toString().trim(), updatedMagicWandCatalogueStock);
+                        MagicWandCatalogueModel updatedMagicWandCatalogueModelStock = orderQuantityUpdate.updateMagicWandCatalogueStockOnUpdateOrderInfo(orderInfo.getMagicWandCatalogueId().toString().trim(), orderInfo.getQuantity(), currentOderInfo);
+                        rtMagicWandCatalogueService.updateMagicWandCatalogueById(orderInfo.getMagicWandCatalogueId().toString().trim(), updatedMagicWandCatalogueModelStock);
                         List<OrderInfo> currentAllOrderInfo = getAllOrderInfo();
                         nameUpdate.updateOrderInfoWizardAndMagicWandName(currentAllOrderInfo, currentOderInfo, orderInfo);
                         currentOderInfo.setQuantity(validatedOrderInfo.getQuantity());
@@ -172,9 +172,9 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             OrderInfo currentOrderInfo = orderInfoRepository.findById(UUID.fromString(id)).orElseThrow(() -> new OrderInfoIdNotFoundException("Order info does not exist."));
             try {
                 // If the magic wand catalogue has not been deleted, then proceed to update the stock before deleting
-                MagicWandCatalogue updatedMagicWandCatalogueStock = orderQuantityUpdate.updateMagicWandCatalogueStockOnDeleteOrderInfo(currentOrderInfo.getMagicWandCatalogueId().toString().trim(), currentOrderInfo.getQuantity());
-                if (updatedMagicWandCatalogueStock != null) {
-                    rtMagicWandCatalogueService.updateMagicWandCatalogueById(currentOrderInfo.getMagicWandCatalogueId().toString().trim(), updatedMagicWandCatalogueStock);
+                MagicWandCatalogueModel updatedMagicWandCatalogueModelStock = orderQuantityUpdate.updateMagicWandCatalogueStockOnDeleteOrderInfo(currentOrderInfo.getMagicWandCatalogueId().toString().trim(), currentOrderInfo.getQuantity());
+                if (updatedMagicWandCatalogueModelStock != null) {
+                    rtMagicWandCatalogueService.updateMagicWandCatalogueById(currentOrderInfo.getMagicWandCatalogueId().toString().trim(), updatedMagicWandCatalogueModelStock);
                     orderInfoRepository.deleteById(UUID.fromString(id));
                 }
             } catch (MagicWandCatalogueNotExistException e) {
