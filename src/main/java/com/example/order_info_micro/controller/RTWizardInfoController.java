@@ -1,8 +1,8 @@
 package com.example.order_info_micro.controller;
 
 import com.example.order_info_micro.dto.WizardInfoDto;
-import com.example.order_info_micro.entity.WizardInfo;
 import com.example.order_info_micro.integration.RTWizardInfoService;
+import com.example.order_info_micro.model.WizardInfo;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

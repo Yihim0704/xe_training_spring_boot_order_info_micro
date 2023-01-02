@@ -4,7 +4,6 @@ import com.example.order_info_micro.business.DetailsValidation;
 import com.example.order_info_micro.business.NameUpdate;
 import com.example.order_info_micro.business.OrderQuantityUpdate;
 import com.example.order_info_micro.database.OrderInfoRepository;
-import com.example.order_info_micro.entity.MagicWandCatalogue;
 import com.example.order_info_micro.entity.OrderInfo;
 import com.example.order_info_micro.exception.client.ClientErrorException;
 import com.example.order_info_micro.exception.client.MagicWandCatalogue.MagicWandCatalogueNotExistException;
@@ -12,7 +11,7 @@ import com.example.order_info_micro.exception.client.MagicWandCatalogue.MagicWan
 import com.example.order_info_micro.exception.client.WizardInfo.WizardInfoNotValidException;
 import com.example.order_info_micro.exception.server.*;
 import com.example.order_info_micro.integration.RTMagicWandCatalogueService;
-import com.example.order_info_micro.integration.RTMagicWandCatalogueServiceImpl;
+import com.example.order_info_micro.model.MagicWandCatalogue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ import static java.lang.Integer.parseInt;
 @Service
 public class OrderInfoServiceImpl implements OrderInfoService {
 
-    private static final Logger logger = LoggerFactory.getLogger(RTMagicWandCatalogueServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(OrderInfoServiceImpl.class);
 
     @Autowired
     private DetailsValidation detailsValidation;

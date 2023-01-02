@@ -1,11 +1,11 @@
 package com.example.order_info_micro.integration;
 
 import com.example.order_info_micro.common.ApiUrl;
-import com.example.order_info_micro.entity.WizardInfo;
 import com.example.order_info_micro.exception.client.ClientErrorException;
 import com.example.order_info_micro.exception.client.RestClientErrorException;
 import com.example.order_info_micro.exception.client.WizardInfo.WizardInfoNotExistException;
 import com.example.order_info_micro.exception.server.ServerErrorException;
+import com.example.order_info_micro.model.WizardInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

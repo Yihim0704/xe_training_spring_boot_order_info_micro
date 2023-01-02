@@ -1,4 +1,4 @@
-package com.example.order_info_micro.entity;
+package com.example.order_info_micro.model;
 
 import lombok.Data;
 

@@ -1,11 +1,13 @@
 package com.example.order_info_micro.business;
 
-import com.example.order_info_micro.entity.MagicWandCatalogue;
 import com.example.order_info_micro.entity.OrderInfo;
-import com.example.order_info_micro.entity.WizardInfo;
 import com.example.order_info_micro.exception.server.InvalidOrderInfoDetailsException;
 import com.example.order_info_micro.integration.RTMagicWandCatalogueService;
 import com.example.order_info_micro.integration.RTWizardInfoService;
+import com.example.order_info_micro.model.MagicWandCatalogue;
+import com.example.order_info_micro.model.WizardInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import java.util.regex.Pattern;
 @Service
 public class DetailsValidationImpl implements DetailsValidation {
 
+    private static final Logger logger = LoggerFactory.getLogger(DetailsValidationImpl.class);
+
     @Autowired
     private RTMagicWandCatalogueService rtMagicWandCatalogueService;
 
@@ -27,6 +31,7 @@ public class DetailsValidationImpl implements DetailsValidation {
 
     @Override
     public Map<String, String> wizardInfoDetailsValidation(String id, String name) throws HttpRequestMethodNotSupportedException {
+        logger.info("Server DetailsValidation.wizardInfoDetailsValidation");
         Map<String, String> wizardInfoDetailsResult = new HashMap<>();
         WizardInfo existWizardInfo = rtWizardInfoService.getWizardInfoById(id);
         String existWizardInfoId = existWizardInfo.getId().toString().trim();
@@ -57,6 +62,7 @@ public class DetailsValidationImpl implements DetailsValidation {
 
     @Override
     public Map<String, String> magicWandCatalogueDetailsValidation(String id, String name, String wizardInfoId) throws HttpRequestMethodNotSupportedException {
+        logger.info("Server DetailsValidation.magicWandCatalogueDetailsValidation");
         Map<String, String> magicWandCatalogueDetailsResult = new HashMap<>();
         MagicWandCatalogue existMagicWandCatalogue = rtMagicWandCatalogueService.getMagicWandCatalogueById(id);
         WizardInfo existWizardInfo = rtWizardInfoService.getWizardInfoById(wizardInfoId);
@@ -96,6 +102,7 @@ public class DetailsValidationImpl implements DetailsValidation {
 
     @Override
     public Map<String, String> magicWandCatalogueDetailsValidationOnUpdate(String id, String name, String wizardInfoId) throws HttpRequestMethodNotSupportedException {
+        logger.info("Server DetailsValidation.magicWandCatalogueDetailsValidationOnUpdate");
         Map<String, String> magicWandCatalogueDetailsResult = new HashMap<>();
         MagicWandCatalogue existMagicWandCatalogue = rtMagicWandCatalogueService.getMagicWandCatalogueById(id);
         WizardInfo existWizardInfo = rtWizardInfoService.getWizardInfoById(wizardInfoId);
@@ -129,6 +136,7 @@ public class DetailsValidationImpl implements DetailsValidation {
 
     @Override
     public OrderInfo orderInfoDetailsValidation(OrderInfo orderInfo) {
+        logger.info("Server DetailsValidation.orderInfoDetailsValidation");
         if (orderInfo.getWizardName().trim().equals("") ||
                 orderInfo.getMagicWandCatalogueName().trim().equals("")) {
             throw new InvalidOrderInfoDetailsException("Name fields must not be empty.");
