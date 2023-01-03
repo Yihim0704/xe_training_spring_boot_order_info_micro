@@ -1,15 +1,15 @@
 package com.example.order_info_micro.integration;
 
-import com.example.order_info_micro.model.MagicWandCatalogueModel;
+import com.example.order_info_micro.ApiResponseDto.MagicWandCatalogueDto;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 import java.util.List;
 
 public interface RTMagicWandCatalogueService {
 
-    List<MagicWandCatalogueModel> getAllMagicWandCatalogue() throws HttpRequestMethodNotSupportedException;
+    List<MagicWandCatalogueDto> getAllMagicWandCatalogue() throws HttpRequestMethodNotSupportedException;
 
-    MagicWandCatalogueModel getMagicWandCatalogueById(String id) throws HttpRequestMethodNotSupportedException;
+    MagicWandCatalogueDto getMagicWandCatalogueById(String id) throws HttpRequestMethodNotSupportedException;
 
-    void updateMagicWandCatalogueById(String id, MagicWandCatalogueModel magicWandCatalogueModel) throws HttpRequestMethodNotSupportedException;
+    void updateMagicWandCatalogueById(String id, MagicWandCatalogueDto magicWandCatalogueDto) throws HttpRequestMethodNotSupportedException;
 }

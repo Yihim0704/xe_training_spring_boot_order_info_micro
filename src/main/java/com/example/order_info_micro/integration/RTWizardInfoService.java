@@ -1,13 +1,13 @@
 package com.example.order_info_micro.integration;
 
-import com.example.order_info_micro.model.WizardInfoModel;
+import com.example.order_info_micro.ApiResponseDto.WizardInfoDto;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 import java.util.List;
 
 public interface RTWizardInfoService {
 
-    List<WizardInfoModel> getAllWizardInfo() throws HttpRequestMethodNotSupportedException;
+    List<WizardInfoDto> getAllWizardInfo() throws HttpRequestMethodNotSupportedException;
 
-    WizardInfoModel getWizardInfoById(String id) throws HttpRequestMethodNotSupportedException;
+    WizardInfoDto getWizardInfoById(String id) throws HttpRequestMethodNotSupportedException;
 }

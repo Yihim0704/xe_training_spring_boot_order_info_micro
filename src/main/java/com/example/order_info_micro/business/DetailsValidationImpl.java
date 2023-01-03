@@ -1,11 +1,11 @@
 package com.example.order_info_micro.business;
 
+import com.example.order_info_micro.ApiResponseDto.MagicWandCatalogueDto;
+import com.example.order_info_micro.ApiResponseDto.WizardInfoDto;
 import com.example.order_info_micro.entity.OrderInfo;
 import com.example.order_info_micro.exception.server.InvalidOrderInfoDetailsException;
 import com.example.order_info_micro.integration.RTMagicWandCatalogueService;
 import com.example.order_info_micro.integration.RTWizardInfoService;
-import com.example.order_info_micro.model.MagicWandCatalogueModel;
-import com.example.order_info_micro.model.WizardInfoModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +33,10 @@ public class DetailsValidationImpl implements DetailsValidation {
     public Map<String, String> wizardInfoDetailsValidation(String id, String name) throws HttpRequestMethodNotSupportedException {
         logger.info("Server DetailsValidation.wizardInfoDetailsValidation");
         Map<String, String> wizardInfoDetailsResult = new HashMap<>();
-        WizardInfoModel existWizardInfoModel = rtWizardInfoService.getWizardInfoById(id);
-        String existWizardInfoId = existWizardInfoModel.getId().toString().trim();
-        String existWizardInfoName = existWizardInfoModel.getName();
-        boolean existWizardInfoActive = existWizardInfoModel.isActive();
+        WizardInfoDto existWizardInfoDto = rtWizardInfoService.getWizardInfoById(id);
+        String existWizardInfoId = existWizardInfoDto.getId().toString().trim();
+        String existWizardInfoName = existWizardInfoDto.getName();
+        boolean existWizardInfoActive = existWizardInfoDto.isActive();
         if (id.equals(existWizardInfoId)) {
             if (name.equalsIgnoreCase(existWizardInfoName)) {
                 if (existWizardInfoActive) {
@@ -64,13 +64,13 @@ public class DetailsValidationImpl implements DetailsValidation {
     public Map<String, String> magicWandCatalogueDetailsValidation(String id, String name, String wizardInfoId) throws HttpRequestMethodNotSupportedException {
         logger.info("Server DetailsValidation.magicWandCatalogueDetailsValidation");
         Map<String, String> magicWandCatalogueDetailsResult = new HashMap<>();
-        MagicWandCatalogueModel existMagicWandCatalogueModel = rtMagicWandCatalogueService.getMagicWandCatalogueById(id);
-        WizardInfoModel existWizardInfoModel = rtWizardInfoService.getWizardInfoById(wizardInfoId);
-        String existMagicWandCatalogueId = existMagicWandCatalogueModel.getId().toString().trim();
-        String existMagicWandCatalogueName = existMagicWandCatalogueModel.getName();
-        int existMagicWandCatalogueStock = existMagicWandCatalogueModel.getStock();
-        int existMagicWandCatalogueAgeLimit = existMagicWandCatalogueModel.getAgeLimit();
-        int existWizardInfoAge = existWizardInfoModel.getAge();
+        MagicWandCatalogueDto existMagicWandCatalogueDto = rtMagicWandCatalogueService.getMagicWandCatalogueById(id);
+        WizardInfoDto existWizardInfoDto = rtWizardInfoService.getWizardInfoById(wizardInfoId);
+        String existMagicWandCatalogueId = existMagicWandCatalogueDto.getId().toString().trim();
+        String existMagicWandCatalogueName = existMagicWandCatalogueDto.getName();
+        int existMagicWandCatalogueStock = existMagicWandCatalogueDto.getStock();
+        int existMagicWandCatalogueAgeLimit = existMagicWandCatalogueDto.getAgeLimit();
+        int existWizardInfoAge = existWizardInfoDto.getAge();
         if (id.equals(existMagicWandCatalogueId)) {
             if (name.equalsIgnoreCase(existMagicWandCatalogueName)) {
                 if (existWizardInfoAge <= existMagicWandCatalogueAgeLimit) {
@@ -104,13 +104,13 @@ public class DetailsValidationImpl implements DetailsValidation {
     public Map<String, String> magicWandCatalogueDetailsValidationOnUpdate(String id, String name, String wizardInfoId) throws HttpRequestMethodNotSupportedException {
         logger.info("Server DetailsValidation.magicWandCatalogueDetailsValidationOnUpdate");
         Map<String, String> magicWandCatalogueDetailsResult = new HashMap<>();
-        MagicWandCatalogueModel existMagicWandCatalogueModel = rtMagicWandCatalogueService.getMagicWandCatalogueById(id);
-        WizardInfoModel existWizardInfoModel = rtWizardInfoService.getWizardInfoById(wizardInfoId);
-        String existMagicWandCatalogueId = existMagicWandCatalogueModel.getId().toString().trim();
-        String existMagicWandCatalogueName = existMagicWandCatalogueModel.getName();
-        int existMagicWandCatalogueStock = existMagicWandCatalogueModel.getStock();
-        int existMagicWandCatalogueAgeLimit = existMagicWandCatalogueModel.getAgeLimit();
-        int existWizardInfoAge = existWizardInfoModel.getAge();
+        MagicWandCatalogueDto existMagicWandCatalogueDto = rtMagicWandCatalogueService.getMagicWandCatalogueById(id);
+        WizardInfoDto existWizardInfoDto = rtWizardInfoService.getWizardInfoById(wizardInfoId);
+        String existMagicWandCatalogueId = existMagicWandCatalogueDto.getId().toString().trim();
+        String existMagicWandCatalogueName = existMagicWandCatalogueDto.getName();
+        int existMagicWandCatalogueStock = existMagicWandCatalogueDto.getStock();
+        int existMagicWandCatalogueAgeLimit = existMagicWandCatalogueDto.getAgeLimit();
+        int existWizardInfoAge = existWizardInfoDto.getAge();
         if (id.equals(existMagicWandCatalogueId)) {
             if (name.equalsIgnoreCase(existMagicWandCatalogueName)) {
                 if (existWizardInfoAge <= existMagicWandCatalogueAgeLimit) {

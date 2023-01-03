@@ -1,8 +1,7 @@
 package com.example.order_info_micro.controller;
 
-import com.example.order_info_micro.dto.WizardInfoDto;
+import com.example.order_info_micro.ApiResponseDto.WizardInfoDto;
 import com.example.order_info_micro.integration.RTWizardInfoService;
-import com.example.order_info_micro.model.WizardInfoModel;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +41,9 @@ public class RTWizardInfoController {
     public ResponseEntity<WizardInfoDto> findWizardInfoById(@PathVariable String id) throws HttpRequestMethodNotSupportedException {
         logger.info("Client RTWizardInfoController.findWizardInfoById");
 
-        WizardInfoModel wizardInfoModel = rtWizardInfoService.getWizardInfoById(id);
+        WizardInfoDto wizardInfoDto = rtWizardInfoService.getWizardInfoById(id);
 
-        WizardInfoDto wizardInfoResponse = modelMapper.map(wizardInfoModel, WizardInfoDto.class);
+        WizardInfoDto wizardInfoResponse = modelMapper.map(wizardInfoDto, WizardInfoDto.class);
 
         return ResponseEntity.ok().body(wizardInfoResponse);
     }

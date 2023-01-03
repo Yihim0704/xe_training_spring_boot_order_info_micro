@@ -1,8 +1,7 @@
 package com.example.order_info_micro.controller;
 
-import com.example.order_info_micro.dto.MagicWandCatalogueDto;
+import com.example.order_info_micro.ApiResponseDto.MagicWandCatalogueDto;
 import com.example.order_info_micro.integration.RTMagicWandCatalogueService;
-import com.example.order_info_micro.model.MagicWandCatalogueModel;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +41,9 @@ public class RTMagicWandCatalogueController {
     public ResponseEntity<MagicWandCatalogueDto> findMagicWandCatalogueById(@PathVariable String id) throws HttpRequestMethodNotSupportedException {
         logger.info("Client RTMagicWandCatalogueController.findMagicWandCatalogueById");
 
-        MagicWandCatalogueModel magicWandCatalogueModel = rtMagicWandCatalogueService.getMagicWandCatalogueById(id);
+        MagicWandCatalogueDto magicWandCatalogueDto = rtMagicWandCatalogueService.getMagicWandCatalogueById(id);
 
-        MagicWandCatalogueDto magicWandCatalogueResponse = modelMapper.map(magicWandCatalogueModel, MagicWandCatalogueDto.class);
+        MagicWandCatalogueDto magicWandCatalogueResponse = modelMapper.map(magicWandCatalogueDto, MagicWandCatalogueDto.class);
 
         return ResponseEntity.ok().body(magicWandCatalogueResponse);
     }

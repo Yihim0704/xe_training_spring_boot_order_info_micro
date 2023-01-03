@@ -1,11 +1,11 @@
 package com.example.order_info_micro.integration;
 
+import com.example.order_info_micro.ApiResponseDto.MagicWandCatalogueDto;
 import com.example.order_info_micro.common.ApiUrl;
 import com.example.order_info_micro.exception.client.ClientErrorException;
 import com.example.order_info_micro.exception.client.MagicWandCatalogue.MagicWandCatalogueNotExistException;
 import com.example.order_info_micro.exception.client.RestClientErrorException;
 import com.example.order_info_micro.exception.server.ServerErrorException;
-import com.example.order_info_micro.model.MagicWandCatalogueModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +30,16 @@ public class RTMagicWandCatalogueServiceImpl implements RTMagicWandCatalogueServ
     private RestTemplate restTemplate;
 
     @Override
-    public List<MagicWandCatalogueModel> getAllMagicWandCatalogue() throws HttpRequestMethodNotSupportedException {
+    public List<MagicWandCatalogueDto> getAllMagicWandCatalogue() throws HttpRequestMethodNotSupportedException {
         logger.info("Client RTMagicWandCatalogueService.getAllMagicWandCatalogue");
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             HttpEntity entity = new HttpEntity<>(null, headers);
-            ResponseEntity<List<MagicWandCatalogueModel>> response = restTemplate.exchange(ApiUrl.MAGIC_WAND_CATALOGUE_GET_ALL_URL, HttpMethod.GET, entity, new ParameterizedTypeReference<List<MagicWandCatalogueModel>>() {
+            ResponseEntity<List<MagicWandCatalogueDto>> response = restTemplate.exchange(ApiUrl.MAGIC_WAND_CATALOGUE_GET_ALL_URL, HttpMethod.GET, entity, new ParameterizedTypeReference<List<MagicWandCatalogueDto>>() {
             });
-            List<MagicWandCatalogueModel> allMagicWandCatalogueModel = response.getBody();
-            return allMagicWandCatalogueModel;
+            List<MagicWandCatalogueDto> allMagicWandCatalogueDto = response.getBody();
+            return allMagicWandCatalogueDto;
         } catch (HttpClientErrorException e) {
             throw new ClientErrorException("Internal client error");
         } catch (HttpServerErrorException e) {
@@ -50,18 +50,18 @@ public class RTMagicWandCatalogueServiceImpl implements RTMagicWandCatalogueServ
     }
 
     @Override
-    public MagicWandCatalogueModel getMagicWandCatalogueById(String id) throws HttpRequestMethodNotSupportedException {
+    public MagicWandCatalogueDto getMagicWandCatalogueById(String id) throws HttpRequestMethodNotSupportedException {
         logger.info("Client RTMagicWandCatalogueService.getMagicWandCatalogueById");
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             HttpEntity<String> entity = new HttpEntity<String>(headers);
-            ResponseEntity<MagicWandCatalogueModel> response = restTemplate.exchange(ApiUrl.MAGIC_WAND_CATALOGUE_GET_BY_ID_URL + id, HttpMethod.GET, entity, MagicWandCatalogueModel.class);
-            MagicWandCatalogueModel magicWandCatalogueModel = response.getBody();
-            if (magicWandCatalogueModel.getId() == null) {
+            ResponseEntity<MagicWandCatalogueDto> response = restTemplate.exchange(ApiUrl.MAGIC_WAND_CATALOGUE_GET_BY_ID_URL + id, HttpMethod.GET, entity, MagicWandCatalogueDto.class);
+            MagicWandCatalogueDto magicWandCatalogueDto = response.getBody();
+            if (magicWandCatalogueDto.getId() == null) {
                 throw new MagicWandCatalogueNotExistException("Magic wand catalogue Id does not exist.", HttpStatus.NOT_FOUND.value());
             }
-            return magicWandCatalogueModel;
+            return magicWandCatalogueDto;
         } catch (HttpClientErrorException e) {
             throw new ClientErrorException("Internal client error");
         } catch (HttpServerErrorException e) {
@@ -72,12 +72,12 @@ public class RTMagicWandCatalogueServiceImpl implements RTMagicWandCatalogueServ
     }
 
     @Override
-    public void updateMagicWandCatalogueById(String id, MagicWandCatalogueModel magicWandCatalogueModel) throws HttpRequestMethodNotSupportedException {
+    public void updateMagicWandCatalogueById(String id, MagicWandCatalogueDto magicWandCatalogueDto) throws HttpRequestMethodNotSupportedException {
         logger.info("Client RTMagicWandCatalogueService.updateMagicWandCatalogueById");
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-            HttpEntity<MagicWandCatalogueModel> requestUpdate = new HttpEntity<MagicWandCatalogueModel>(magicWandCatalogueModel, headers);
+            HttpEntity<MagicWandCatalogueDto> requestUpdate = new HttpEntity<MagicWandCatalogueDto>(magicWandCatalogueDto, headers);
             restTemplate.exchange(ApiUrl.MAGIC_WAND_CATALOGUE_UPDATE_BY_ID_URL + id, HttpMethod.PUT, requestUpdate, void.class);
         } catch (HttpClientErrorException e) {
             throw new ClientErrorException("Internal client error");

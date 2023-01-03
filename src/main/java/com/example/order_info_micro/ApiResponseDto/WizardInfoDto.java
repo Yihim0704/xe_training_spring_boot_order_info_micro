@@ -1,11 +1,11 @@
-package com.example.order_info_micro.model;
+package com.example.order_info_micro.ApiResponseDto;
 
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
-public class WizardInfoModel {
+public class WizardInfoDto {
     private UUID id;
     private String name;
     private int age;

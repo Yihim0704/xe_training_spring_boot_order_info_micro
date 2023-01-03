@@ -1,4 +1,4 @@
-package com.example.order_info_micro.dto;
+package com.example.order_info_micro.ApiResponseDto;
 
 import lombok.Data;
 
