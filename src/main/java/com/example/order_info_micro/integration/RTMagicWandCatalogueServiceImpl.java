@@ -1,7 +1,7 @@
 package com.example.order_info_micro.integration;
 
-import com.example.order_info_micro.ApiResponseDto.MagicWandCatalogueDto;
 import com.example.order_info_micro.common.ApiUrl;
+import com.example.order_info_micro.dto.ApiDto.MagicWandCatalogueDto;
 import com.example.order_info_micro.exception.client.ClientErrorException;
 import com.example.order_info_micro.exception.client.MagicWandCatalogue.MagicWandCatalogueNotExistException;
 import com.example.order_info_micro.exception.client.RestClientErrorException;
@@ -78,7 +78,7 @@ public class RTMagicWandCatalogueServiceImpl implements RTMagicWandCatalogueServ
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             HttpEntity<MagicWandCatalogueDto> requestUpdate = new HttpEntity<MagicWandCatalogueDto>(magicWandCatalogueDto, headers);
-            restTemplate.exchange(ApiUrl.MAGIC_WAND_CATALOGUE_UPDATE_BY_ID_URL + id, HttpMethod.PUT, requestUpdate, void.class);
+            restTemplate.exchange(ApiUrl.MAGIC_WAND_CATALOGUE_UPDATE_STOCK_BY_ID_URL + id, HttpMethod.PUT, requestUpdate, void.class);
         } catch (HttpClientErrorException e) {
             throw new ClientErrorException("Internal client error");
         } catch (HttpServerErrorException e) {

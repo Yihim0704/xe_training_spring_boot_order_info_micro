@@ -1,7 +1,7 @@
 package com.example.order_info_micro.integration;
 
-import com.example.order_info_micro.ApiResponseDto.WizardInfoDto;
 import com.example.order_info_micro.common.ApiUrl;
+import com.example.order_info_micro.dto.ApiDto.WizardInfoDto;
 import com.example.order_info_micro.exception.client.ClientErrorException;
 import com.example.order_info_micro.exception.client.RestClientErrorException;
 import com.example.order_info_micro.exception.client.WizardInfo.WizardInfoNotExistException;

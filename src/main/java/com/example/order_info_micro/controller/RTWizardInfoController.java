@@ -1,6 +1,6 @@
 package com.example.order_info_micro.controller;
 
-import com.example.order_info_micro.ApiResponseDto.WizardInfoDto;
+import com.example.order_info_micro.dto.ApiDto.WizardInfoDto;
 import com.example.order_info_micro.integration.RTWizardInfoService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;

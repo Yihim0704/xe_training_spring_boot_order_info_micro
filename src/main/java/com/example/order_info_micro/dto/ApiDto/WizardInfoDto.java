@@ -1,4 +1,4 @@
-package com.example.order_info_micro.ApiResponseDto;
+package com.example.order_info_micro.dto.ApiDto;
 
 import lombok.Data;
 
@@ -9,6 +9,5 @@ public class WizardInfoDto {
     private UUID id;
     private String name;
     private int age;
-    private String joinedDate;
     private boolean active;
 }

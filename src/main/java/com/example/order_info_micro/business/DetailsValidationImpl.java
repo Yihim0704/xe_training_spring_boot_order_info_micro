@@ -1,7 +1,7 @@
 package com.example.order_info_micro.business;
 
-import com.example.order_info_micro.ApiResponseDto.MagicWandCatalogueDto;
-import com.example.order_info_micro.ApiResponseDto.WizardInfoDto;
+import com.example.order_info_micro.dto.ApiDto.MagicWandCatalogueDto;
+import com.example.order_info_micro.dto.ApiDto.WizardInfoDto;
 import com.example.order_info_micro.entity.OrderInfo;
 import com.example.order_info_micro.exception.server.InvalidOrderInfoDetailsException;
 import com.example.order_info_micro.integration.RTMagicWandCatalogueService;

@@ -1,6 +1,6 @@
 package com.example.order_info_micro.integration;
 
-import com.example.order_info_micro.ApiResponseDto.MagicWandCatalogueDto;
+import com.example.order_info_micro.dto.ApiDto.MagicWandCatalogueDto;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 import java.util.List;

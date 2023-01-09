@@ -1,10 +1,10 @@
 package com.example.order_info_micro.service;
 
-import com.example.order_info_micro.ApiResponseDto.MagicWandCatalogueDto;
 import com.example.order_info_micro.business.DetailsValidation;
 import com.example.order_info_micro.business.NameUpdate;
 import com.example.order_info_micro.business.OrderQuantityUpdate;
 import com.example.order_info_micro.database.OrderInfoRepository;
+import com.example.order_info_micro.dto.ApiDto.MagicWandCatalogueDto;
 import com.example.order_info_micro.entity.OrderInfo;
 import com.example.order_info_micro.exception.client.ClientErrorException;
 import com.example.order_info_micro.exception.client.MagicWandCatalogue.MagicWandCatalogueNotExistException;

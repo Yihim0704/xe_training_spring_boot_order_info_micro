@@ -1,6 +1,6 @@
 package com.example.order_info_micro.controller;
 
-import com.example.order_info_micro.ApiResponseDto.MagicWandCatalogueDto;
+import com.example.order_info_micro.dto.ApiDto.MagicWandCatalogueDto;
 import com.example.order_info_micro.integration.RTMagicWandCatalogueService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
