@@ -82,10 +82,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             }
         } catch (NullPointerException e) {
             throw new InvalidOrderInfoDetailsException("All fields must not be null.");
-        } catch (HttpServerErrorException e) {
-            throw new ServerErrorException(e.getLocalizedMessage());
         } catch (HttpClientErrorException e) {
-            throw new ClientErrorException(e.getLocalizedMessage());
+            throw new ClientErrorException(e.getMessage(), e.getStatusCode().value());
+        } catch (HttpServerErrorException e) {
+            throw new ServerErrorException(e.getMessage(), e.getStatusCode().value());
         }
 
     }
@@ -98,10 +98,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
                 throw new NoOrderInfoFoundException("There is no order info in the database.");
             }
             return orderInfoRepository.findAll();
-        } catch (HttpServerErrorException e) {
-            throw new ServerErrorException(e.getLocalizedMessage());
         } catch (HttpClientErrorException e) {
-            throw new ClientErrorException(e.getLocalizedMessage());
+            throw new ClientErrorException(e.getMessage(), e.getStatusCode().value());
+        } catch (HttpServerErrorException e) {
+            throw new ServerErrorException(e.getMessage(), e.getStatusCode().value());
         }
     }
 
@@ -110,10 +110,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         logger.info("Server OrderInfoService.getOrderInfoById");
         try {
             return orderInfoRepository.findById(UUID.fromString(id)).orElseThrow(() -> new OrderInfoIdNotFoundException("Order info does not exist."));
-        } catch (HttpServerErrorException e) {
-            throw new ServerErrorException(e.getLocalizedMessage());
         } catch (HttpClientErrorException e) {
-            throw new ClientErrorException(e.getLocalizedMessage());
+            throw new ClientErrorException(e.getMessage(), e.getStatusCode().value());
+        } catch (HttpServerErrorException e) {
+            throw new ServerErrorException(e.getMessage(), e.getStatusCode().value());
         }
     }
 
@@ -158,10 +158,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             }
         } catch (NullPointerException e) {
             throw new InvalidOrderInfoDetailsException("All fields must not be null.");
-        } catch (HttpServerErrorException e) {
-            throw new ServerErrorException(e.getLocalizedMessage());
         } catch (HttpClientErrorException e) {
-            throw new ClientErrorException(e.getLocalizedMessage());
+            throw new ClientErrorException(e.getMessage(), e.getStatusCode().value());
+        } catch (HttpServerErrorException e) {
+            throw new ServerErrorException(e.getMessage(), e.getStatusCode().value());
         }
     }
 
@@ -182,10 +182,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
                 orderInfoRepository.deleteById(UUID.fromString(id));
             }
             return "Order info has been deleted successfully !\tId: " + id;
-        } catch (HttpServerErrorException e) {
-            throw new ServerErrorException(e.getLocalizedMessage());
         } catch (HttpClientErrorException e) {
-            throw new ClientErrorException(e.getLocalizedMessage());
+            throw new ClientErrorException(e.getMessage(), e.getStatusCode().value());
+        } catch (HttpServerErrorException e) {
+            throw new ServerErrorException(e.getMessage(), e.getStatusCode().value());
         }
     }
 }

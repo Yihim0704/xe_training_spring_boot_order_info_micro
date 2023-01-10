@@ -34,7 +34,7 @@ public class ServerExceptionsHandler {
     public Map<String, Object> handleServerErrorException(ServerErrorException ex) {
         Map<String, Object> message = new HashMap<>();
         String serverErrorExceptionTraceId = getTraceId();
-        message.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        message.put("code", ex.getHttpStatus());
         message.put("message", ex.getLocalizedMessage());
         ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), serverErrorExceptionTraceId, message);
         logger.info("ServerErrorExceptionTraceId: {}", serverErrorExceptionTraceId);

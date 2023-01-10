@@ -3,7 +3,6 @@ package com.example.order_info_micro.integration;
 import com.example.order_info_micro.common.ApiUrl;
 import com.example.order_info_micro.dto.ApiDto.WizardInfoDto;
 import com.example.order_info_micro.exception.client.ClientErrorException;
-import com.example.order_info_micro.exception.client.RestClientErrorException;
 import com.example.order_info_micro.exception.client.WizardInfo.WizardInfoNotExistException;
 import com.example.order_info_micro.exception.server.ServerErrorException;
 import org.slf4j.Logger;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -41,11 +39,9 @@ public class RTWizardInfoServiceImpl implements RTWizardInfoService {
             List<WizardInfoDto> allWizardInfoDto = response.getBody();
             return allWizardInfoDto;
         } catch (HttpClientErrorException e) {
-            throw new ClientErrorException("Internal client error");
+            throw new ClientErrorException(e.getMessage(), e.getStatusCode().value());
         } catch (HttpServerErrorException e) {
-            throw new ServerErrorException("Internal server error");
-        } catch (RestClientException e) {
-            throw new RestClientErrorException(e.getMessage());
+            throw new ServerErrorException(e.getMessage(), e.getStatusCode().value());
         }
     }
 
@@ -63,11 +59,9 @@ public class RTWizardInfoServiceImpl implements RTWizardInfoService {
             }
             return wizardInfoDto;
         } catch (HttpClientErrorException e) {
-            throw new ClientErrorException("Internal client error");
+            throw new ClientErrorException(e.getMessage(), e.getStatusCode().value());
         } catch (HttpServerErrorException e) {
-            throw new ServerErrorException("Internal server error");
-        } catch (RestClientException e) {
-            throw new RestClientErrorException(e.getMessage());
+            throw new ServerErrorException(e.getMessage(), e.getStatusCode().value());
         }
     }
 };

@@ -4,7 +4,6 @@ import com.example.order_info_micro.common.ApiUrl;
 import com.example.order_info_micro.dto.ApiDto.MagicWandCatalogueDto;
 import com.example.order_info_micro.exception.client.ClientErrorException;
 import com.example.order_info_micro.exception.client.MagicWandCatalogue.MagicWandCatalogueNotExistException;
-import com.example.order_info_micro.exception.client.RestClientErrorException;
 import com.example.order_info_micro.exception.server.ServerErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -41,11 +39,9 @@ public class RTMagicWandCatalogueServiceImpl implements RTMagicWandCatalogueServ
             List<MagicWandCatalogueDto> allMagicWandCatalogueDto = response.getBody();
             return allMagicWandCatalogueDto;
         } catch (HttpClientErrorException e) {
-            throw new ClientErrorException("Internal client error");
+            throw new ClientErrorException(e.getMessage(), e.getStatusCode().value());
         } catch (HttpServerErrorException e) {
-            throw new ServerErrorException("Internal server error");
-        } catch (RestClientException e) {
-            throw new RestClientErrorException(e.getMessage());
+            throw new ServerErrorException(e.getMessage(), e.getStatusCode().value());
         }
     }
 
@@ -63,11 +59,9 @@ public class RTMagicWandCatalogueServiceImpl implements RTMagicWandCatalogueServ
             }
             return magicWandCatalogueDto;
         } catch (HttpClientErrorException e) {
-            throw new ClientErrorException("Internal client error");
+            throw new ClientErrorException(e.getMessage(), e.getStatusCode().value());
         } catch (HttpServerErrorException e) {
-            throw new ServerErrorException("Internal server error");
-        } catch (RestClientException e) {
-            throw new RestClientErrorException(e.getMessage());
+            throw new ServerErrorException(e.getMessage(), e.getStatusCode().value());
         }
     }
 
@@ -80,11 +74,9 @@ public class RTMagicWandCatalogueServiceImpl implements RTMagicWandCatalogueServ
             HttpEntity<MagicWandCatalogueDto> requestUpdate = new HttpEntity<MagicWandCatalogueDto>(magicWandCatalogueDto, headers);
             restTemplate.exchange(ApiUrl.MAGIC_WAND_CATALOGUE_UPDATE_STOCK_BY_ID_URL + id, HttpMethod.PUT, requestUpdate, void.class);
         } catch (HttpClientErrorException e) {
-            throw new ClientErrorException("Internal client error");
+            throw new ClientErrorException(e.getMessage(), e.getStatusCode().value());
         } catch (HttpServerErrorException e) {
-            throw new ServerErrorException("Internal server error");
-        } catch (RestClientException e) {
-            throw new RestClientErrorException(e.getMessage());
+            throw new ServerErrorException(e.getMessage(), e.getStatusCode().value());
         }
     }
 }

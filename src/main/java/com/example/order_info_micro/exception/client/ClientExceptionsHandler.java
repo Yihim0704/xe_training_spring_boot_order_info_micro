@@ -11,7 +11,6 @@ import com.example.order_info_micro.exception.server.ServerExceptionsHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -39,22 +38,10 @@ public class ClientExceptionsHandler {
     public Map<String, Object> handleClientErrorException(ClientErrorException ex) {
         Map<String, Object> message = new HashMap<>();
         String clientErrorExceptionTraceId = getTraceId();
-        message.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        message.put("code", ex.getHttpStatus());
         message.put("message", ex.getMessage());
         ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), clientErrorExceptionTraceId, message);
         logger.info("ClientErrorExceptionTraceId: {}", clientErrorExceptionTraceId);
-        logger.info(String.valueOf(exceptionFormat.toFormat()));
-        return exceptionFormat.toFormat();
-    }
-
-    @ExceptionHandler(RestClientErrorException.class)
-    public Map<String, Object> handleRestClientErrorException(RestClientErrorException ex) {
-        Map<String, Object> message = new HashMap<>();
-        String restClientErrorExceptionTraceId = getTraceId();
-        message.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        message.put("message", ex.getMessage());
-        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), restClientErrorExceptionTraceId, message);
-        logger.info("RestClientErrorExceptionTraceId: {}", restClientErrorExceptionTraceId);
         logger.info(String.valueOf(exceptionFormat.toFormat()));
         return exceptionFormat.toFormat();
     }
